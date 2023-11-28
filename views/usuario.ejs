@@ -1,0 +1,11 @@
+<%- include('./partials/head') %>
+<%- include('./partials/header') %>
+<%- include('./partials/usuarioDetalhes') %>
+<div class="comentary">
+  <form action="/usuarios/<%= usuario.id %>" method="POST">
+    <label for=""></label>
+    <input type="text" name="comentarios" placeholder="Insira um comentario">
+    <button type="submit">Enviar</button>
+  </form>
+</div>
+<%- include('./partials/footer') %>

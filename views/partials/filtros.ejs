@@ -1,0 +1,88 @@
+<div class="navbar">
+  <form action="/" method="GET">
+    <div class="search-option">
+      <input type="date" id="start-date" name="inicio">
+      <input type="date" id="end-date" name="fim">
+    </div>
+    <div class="search-option">
+      <select id="assinatura" name="assinatura">
+        <option value="" selected disabled>Status Assinatura</option>
+        <optgroup label="Geral">
+          <option value="active">Ativo</option>
+          <option value="inactive">Inativo</option>
+          <option value="canceled">Cancelado</option>
+          <option value="pastdue">Atrasado</option>
+          <option value="trial">Em teste</option>
+        </optgroup>
+        <optgroup label="Hotmart">
+          <option value="ACTIVE">Ativo</option>
+          <option value="INACTIVE">Inativo</option>
+          <option value="DELAYED">Atrasado</option>
+          <option value="CANCELLED_BY_ADMIN">Cancelado pelo Administrador</option>
+          <option value="CANCELLED_BY_SELLER">Cancelado pelo Vendedor</option>
+          <option value="CANCELLED_BY_CUSTOMER">Cancelado pelo Cliente</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="search-option">
+      <select id="transacao" name="transacao">
+        <option value="" selected disabled>Status Compra</option>
+        <optgroup label="Geral">
+          <option value="approved">Aprovado</option>
+          <option value="canceled">Cancelado</option>
+          <option value="refunded">Reembolsado</option>
+          <option value="waiting_payment">Aguardando Pagamento</option>
+          <option value="declined_by_card_company">Recusada pela operadora de cartão</option>
+          <option value="rejected_by_anti-fraud">Recusada pelo antifraude</option>
+        </optgroup>
+        <optgroup label="Hotmart">
+          <option value="APPROVED">Aprovado</option>
+          <option value="CANCELLED">Cancelado</option>
+          <option value="REFUNDED">Reembolsado</option>
+          <option value="OVERDUE">Atrasado</option>
+          <option value="COMPLETE">Completo</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="search-option">
+      <select id="produto" name="produto">
+        <option value="" selected disabled>Produtos</option>
+        <% const sortedProdutos = produtos
+          .filter(item => !item.nome.startsWith('#'))
+          .sort((a, b) => a.nome.localeCompare(b.nome));
+        sortedProdutos.forEach(item => { %>
+        <option value="<%= item.nome %>"><%= item.nome %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="search-option">
+      <select id="category" name="category">
+        <option value="" selected disabled>Categorias</option>
+        <% categories.forEach(item => { %>
+        <option value="<%= item.id %>"><%= item.name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <input type="text" name="pesquisa" placeholder="Busca">
+    <button type="submit">Buscar</button>
+  </form>
+</div>
+<% if (query.options) {%>
+<script>
+  const search = JSON.parse('<%- JSON.stringify(query.pesquisa) %>')
+  if (search) document.querySelector(`input[name='pesquisa']`).setAttribute('placeholder', `${search}`)
+
+  const startDate = JSON.parse('<%- JSON.stringify(query.inicio) %>')
+  if (startDate) document.querySelector(`#start-date`).value = startDate
+
+  const endDate = JSON.parse('<%- JSON.stringify(query.fim) %>')
+  if (endDate) document.querySelector(`#end-date`).value = endDate
+
+  const options = JSON.parse('<%- JSON.stringify(query.options) %>')
+  options.filter(option => option).forEach(option => {
+    const element = document.querySelector(`option[value="${option}"]`)
+    if (element) element.setAttribute('selected', '')
+  })
+</script>
+<% } %>

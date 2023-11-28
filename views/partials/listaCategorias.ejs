@@ -1,0 +1,84 @@
+<div class="container">
+  <div class="back-btn">
+    <a href="/">
+      <strong>
+        << Voltar </strong>
+    </a>
+  </div>
+  <div class="create-category-container ">
+    <div id="category-name-container">
+      <label for="category-name">Categoria</label>
+      <input type="text" name="category-name" id="category-name">
+    </div>
+    <button id="category-create-button" class="create-button" type="button" onclick=<%=`createCategory()`%>>+</button>
+  </div>
+</div>
+
+<div class="container list">
+  <% for (let category of categories) { %> <% const idsProdutos = category.produtos.map(produto => produto.id) %> <div id=<%=`category-${category.id}`%> class="list-item">
+    <div class="list-item-card">
+      <section class="collapsible" onclick="turnCollapsibleOn(this)">
+        <h4 class="highlighted-border"><%=category.name%></h4>
+        <div>
+          <strong>
+            +
+          </strong>
+        </div>
+      </section>
+      <div class="content">
+        <div class="input-select">
+          <select id=<%=`select-${category.id}`%>>
+            <option value="" selected disabled>Produtos</option>
+            <% produtos.forEach(item => { %>
+            <%if(!idsProdutos.includes(item.id)) {%>
+            <option value="<%= item.id %>"><%= item.nome %></option>
+            <%}%>
+              <% }) %>
+          </select>
+          <button type="submit" onclick=<%=`addProductToCategory(${category.id})`%>> <strong>
+              +
+            </strong></button>
+        </div>
+        <ul>
+          <% for (let produto of category.produtos) { %>
+          <li data-id=<%=`${produto.id}`%>>
+            <div class="tag">
+              <span>
+                <%=produto.nome%>
+              </span>
+              <button type="button" class="tag-delete-button" onclick=<%=`removeProductInCategory(${category.id},${produto.id})`%>>
+                x
+              </button>
+            </div>
+          </li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+    <button type="button" class="delete-button" onclick=<%=`removeCategory(${category.id})`%>>
+      x
+    </button>
+  </div>
+  <% } %>
+</div>
+</div>
+<script>
+  function turnCollapsibleOn(element) {
+    element.classList.toggle('active');
+    var content = element.nextElementSibling;
+    if (content.style.display === 'flex') {
+      element.children[1].children[0].textContent = '+';
+      content.style.display = 'none';
+    } else {
+      content.style.display = 'flex';
+      element.children[1].children[0].textContent = '-';
+    }
+  }
+  var input = document.getElementById("category-name");
+  input.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      document.getElementById("category-create-button").click();
+    }
+  });
+</script>

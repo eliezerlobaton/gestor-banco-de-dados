@@ -1,0 +1,105 @@
+<div class="container">
+  <div class="row-container">
+    <div class="btn">
+      <a onclick="exportTableToCSV('#users-table',  'usuarios.csv')">
+        <strong>
+          -- Exportar CSV -- </strong>
+      </a>
+    </div>
+    <div class="btn">
+      <a href="/category">
+        <strong>
+          Categorias >>
+        </strong>
+      </a>
+    </div>
+  </div>
+  <table id="users-table">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Telefone</th>
+        <th>Status Assinatura</th>
+        <th>Data de Renovação</th>
+        <th>Status Compra</th>
+        <th>Data de Compra</th>
+        <th>Cometário</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (let usuario of usuarios) { %>
+      <tr>
+        <td><a href=<%=`/usuarios/${usuario.id}`%>><%= usuario.nome %></a></td>
+        <td><a href=<%=`/usuarios/${usuario.id}`%>>
+            <%= usuario.email[0].email %>
+          </a></td>
+        <td><a href=<%=`/usuarios/${usuario.id}`%>><%= usuario.telefone %></a></td>
+        <td><a href=<%=`/usuarios/${usuario.id}`%>>
+            <% if (usuario.assinatura && usuario.assinatura.length > 0) { %>
+            <% let assinatura = usuario.assinatura[usuario.assinatura.length -1] %>
+            <%= translateStatus(assinatura.status) %>
+            <% } %>
+          </a></td>
+        <td><a href=<%=`/usuarios/${usuario.id}`%>>
+            <% if (usuario.assinatura && usuario.assinatura.length > 0) { %>
+            <% let assinatura = usuario.assinatura[usuario.assinatura.length -1] %>
+            <%= formatDate(assinatura.data_renovacao) %>
+            <% } %>
+          </a></td>
+        <td><a href=<%=`/usuarios/${usuario.id}`%>>
+            <% if (usuario.transacao && usuario.transacao.length > 0) { %>
+            <% let transacao = usuario.transacao[usuario.transacao.length -1] %>
+            <%= translateStatus(transacao.status) %>
+            <% } %>
+          </a></td>
+        <td><a href=<%=`/usuarios/${usuario.id}`%>>
+            <% if (usuario.transacao && usuario.transacao.length > 0) { %>
+            <% let transacao = usuario.transacao[usuario.transacao.length -1] %>
+            <%= formatDate(transacao.data_confirmacao) %>
+            <% } %>
+          </a></td>
+        <td><a href=<%=`/usuarios/${usuario.id}`%>><%= usuario.comentarios %></a></td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<% function formatDate(dateString) {
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+} %>
+
+<% function translateStatus(status) {
+  const statusTranslations = {
+    'waiting_payment': 'Aguardando pagamento',
+    'refunded': 'Reembolsado',
+    'expired': 'Expirado',
+    'canceled': 'Cancelado',
+    'approved': 'Aprovado',
+    'REFUNDED': 'Reembolsado',
+    'OVERDUE': 'Atrasado',
+    'COMPLETE': 'Completo',
+    'APPROVED': 'Aprovado',
+    'ACTIVE': 'Ativo',
+    'active': 'Ativo',
+    'CANCELLED': 'Cancelado',
+    'CANCELLED_BY_ADMIN': 'Cancelado pelo Administrador',
+    'CANCELLED_BY_CUSTOMER': 'Cancelado pelo Cliente',
+    'CANCELLED_BY_SELLER': 'Cancelado pelo Vendedor',
+    'DELAYED': 'Atrasado',
+    'INACTIVE': 'Inativo',
+    'inactive': 'Inativo',
+    'pastdue': 'Vencido',
+    'trial': 'Teste',
+    'rejected_by_anti-fraud': 'Recusada pelo antifraude',
+    'declined_by_card_company': 'Recusada pela operadora de cartão',
+    'PROTESTED' : 'Protestado',
+  };
+
+  return statusTranslations[status] || status;
+} %>

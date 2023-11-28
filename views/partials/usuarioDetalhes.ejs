@@ -1,0 +1,261 @@
+<div class="container">
+  <div class="back-btn">
+    <a href="/">
+      <strong>
+        << Voltar </strong>
+    </a>
+  </div>
+  <div class="card">
+    <h3 class="highlighted-border"><%= usuario.nome %></h3>
+    <ul>
+      <li>
+        <strong>
+          Documento:
+        </strong>
+        <%= usuario.documento %>
+      </li>
+      <% for (let email of usuario.email) { %>
+      <li>
+        <strong>
+          Email:
+        </strong>
+        <%= email.email %>
+      </li>
+      <% } %>
+      <li>
+        <strong>
+          Endereco:
+        </strong>
+        <%= usuario.endereco %>
+      </li>
+      <li>
+        <strong>
+          Numero:
+        </strong>
+        <%= usuario.numero %>
+      </li>
+      <li>
+        <strong>
+          Complemento:
+        </strong>
+        <%= usuario.complemento %>
+      </li>
+      <li>
+        <strong>
+          Cep:
+        </strong>
+        <%= usuario.cep %>
+      </li>
+      <li>
+        <strong>
+          Estado:
+        </strong>
+        <%= usuario.estado %>
+      </li>
+      <li>
+        <strong>
+          Cidade:
+        </strong>
+        <%= usuario.cidade %>
+      </li>
+      <li>
+        <strong>
+          Comentario:
+        </strong>
+        <%= usuario.comentarios %>
+      </li>
+    </ul>
+    <br>
+    <section class="collapsible">
+      <h4 class="highlighted-border">
+        Produtos
+      </h4>
+      <div><strong>
+          +
+        </strong> </div>
+    </section>
+    <div class="content">
+      <section class="collapsible">
+        <h4>
+          Assinaturas
+        </h4>
+        <div class="plus-sign"><strong>
+            +
+          </strong> </div>
+      </section>
+      <div class="content">
+        <% usuario.produtos.assinaturas.forEach((assinatura) => { %>
+        <ul>
+          <li>
+            <strong>
+              Assinatura:
+            </strong>
+            <%= assinatura.nome %>
+          </li>
+          <li>
+            <strong>
+              Produto:
+            </strong>
+            <%= assinatura.produto %>
+          </li>
+          <li>
+            <strong>
+              Tipo produto:
+            </strong>
+            <%= assinatura.tipoProduto %>
+          </li>
+          <li>
+            <strong>
+              Status:
+            </strong>
+            <%= translateStatus(assinatura.status) %>
+          </li>
+          <li>
+            <strong>
+              Data renovação:
+            </strong>
+            <%= assinatura.dataRenovacao %>
+          </li>
+          <li>
+            <strong>
+              Tempo de acesso:
+            </strong>
+            <%= assinatura.tempoAcesso %>
+          </li>
+          <% if(assinatura.dataCancelamento) { %>
+          <li>
+            <strong>
+              Data de cancelamento:
+            </strong>
+            <%= assinatura.dataCancelamento %>
+          </li>
+          <% } %>
+        </ul>
+        <hr>
+        <br>
+        <% }) %>
+      </div>
+      <section class="collapsible">
+        <h4>
+          Cursos
+        </h4>
+        <div><strong>
+            +
+          </strong> </div>
+      </section>
+      <div class="content">
+        <ul>
+          <% usuario.produtos.cursos.forEach((curso) => { %>
+          <li>
+            <strong>
+              Nome:
+            </strong>
+            <%= curso.nome %>
+          </li>
+          <li>
+            <strong>
+              Categoria:
+            </strong>
+            <%= curso.categoria %>
+          </li>
+          <li>
+            <strong>
+              Status:
+            </strong>
+            <%= curso.status %>
+          </li>
+          <li>
+            <strong>
+              Data expiração:
+            </strong>
+            <%= curso.dataExpiracao %>
+          </li>
+          <li>
+            <strong>
+              Tempo de acesso:
+            </strong>
+            <%= curso.tempoAcesso %>
+          </li>
+          <br>
+          <hr>
+          <% }) %>
+        </ul>
+      </div>
+    </div>
+    <section class="collapsible">
+      <h4 class="highlighted-border">
+        Transações
+      </h4>
+      <div><strong>
+          +
+        </strong> </div>
+    </section>
+    <div class="content">
+      <ul>
+        <% usuario.transacao.forEach((transacao, index) => { %>
+        <li>
+          <strong>Transação <%=index + 1 %> </strong>
+          <p><b>Plataforma:</b> <%= transacao.data_source %></p>
+          <p><b>Status:</b> <%= translateStatus(transacao.status) %></p>
+          <p><b>Confirmação da compra:</b> <%= transacao.data_confirmacao %></p>
+          <p><b>Cancelameto da compra:</b> <%= transacao.data_cancelamento %></p>
+          <p><b>Produto:</b> <%= transacao.produto.nome %></p>
+          <p><b>Oferta:</b> <%= transacao.oferta ? transacao.oferta.nome : '' %></p>
+          <p><b>Metodo de pagamento:</b> <%= transacao.metodo_pagamento %></p>
+          <p><b>Tipo de moeda:</b> <%= transacao.moeda_compra %></p>
+          <p><b>Valor da compra:</b> <%= transacao.valor %></p>
+          <p><span style=<%= `background-color:${(transacao.finishedInstallments)? '#0da5ba' : '#0e40bb' }; color:#fff`%>><b>Parcelas:</b> <%= transacao.installmentNumber %></span></p>
+        </li>
+        <hr>
+        <% }) %>
+      </ul>
+    </div>
+  </div>
+</div>
+<% function translateStatus(status) {
+  const statusTranslations = {
+    'waiting_payment': 'Aguardando pagamento',
+    'refunded': 'Reembolsado',
+    'expired': 'Expirado',
+    'canceled': 'Cancelado',
+    'approved': 'Aprovado',
+    'REFUNDED': 'Reembolsado',
+    'OVERDUE': 'Atrasado',
+    'COMPLETE': 'Completo',
+    'APPROVED': 'Aprovado',
+    'ACTIVE': 'Ativo',
+    'active': 'Ativo',
+    'CANCELLED': 'Cancelado',
+    'CANCELLED_BY_ADMIN': 'Cancelado pelo Administrador',
+    'CANCELLED_BY_CUSTOMER': 'Cancelado pelo Cliente',
+    'CANCELLED_BY_SELLER': 'Cancelado pelo Vendedor',
+    'DELAYED': 'Atrasado',
+    'INACTIVE': 'Inativo',
+    'inactive': 'Inativo',
+    'pastdue': 'Vencido',
+    'trial': 'Teste',
+    'rejected_by_anti-fraud': 'Recusada pelo antifraude',
+    'declined_by_card_company': 'Recusada pela operadora de cartão',
+    'PROTESTED' : 'Protestado'
+  };
+
+  return statusTranslations[status] || status;
+} %>
+<script>
+  var coll = document.getElementsByClassName("collapsible");
+  var i;
+
+  for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var content = this.nextElementSibling;
+      if (content.style.display === "flex") {
+        this.children[1].children[0].textContent = '+';
+        content.style.display = "none";
+      } else {
+        content.style.display = "flex";
+        this.children[1].children[0].textContent = '-';
+      }
+    });
+  }
+</script>
